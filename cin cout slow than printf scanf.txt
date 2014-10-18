@@ -1,0 +1,11 @@
+There are a few potential performance pitfalls with cin/cout:
+By default, cin/cout waste time synchronizing themselves with the C library’s stdio buffers, so that you can freely intermix calls to scanf/printf with operations on cin/cout. Turn this off with 
+std::ios_base::sync_with_stdio(false);
+
+Many C++ tutorials tell you to write cout << endl instead of cout << '\n'. But endl is actually slower because it forces a flush, which is usually unnecessary. (You’d need to flush if you were writing, say, an interactive progress bar, but not when writing a million lines of data.) Write '\n' instead of endl.
+
+There was a bug in very old versions of GCC (pre-2004) that significantly slowed down C++ iostreams. Don’t use ancient compilers.
+
+Avoid these pitfalls, and cin/cout will be just as fast as scanf/printf. My benchmarks indicate that cin/cout is actually 5%–10% faster. This is probably because scanf/printf need to interpret their format string argument at runtime and incur the overhead of varargs for the other arguments, while the overload resolution for cin/cout all happens at compile time. In any case, the difference is small enough that you don’t have to care either way, since almost no reasonable code performs so much input/output for that difference to matter.
+
+other fastest way is to use buffer
