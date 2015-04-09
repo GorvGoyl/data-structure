@@ -1,0 +1,94 @@
+/*Partition a linked list around a value x, such that all nodes
+ less than x come before all nodes greater than or equal to x
+*/
+
+//order of nodes is not preserved!!
+/* ALGORITHM:
+ 1. maintain 2 poiters : cur,last. cur points to head.
+ 2. move cur to next till we find node > x
+ 	2.1 now we have to find a node with data < x
+ 	2.2 increment last ptr till we get node < x. start last ptr from cur ptr location.
+	2.2 now swap these 2 poiters values.
+ 3. repeat  
+
+*/
+#include<stdio.h>
+#include<stdlib.h>
+
+/* A linked list node */
+struct node
+{
+ int data;
+ struct node *next;
+};
+ 
+
+/* UTILITY FUNCTIONS */
+/* Function to add a node at the begining of Linked List */
+void push(struct node** head_ref, int new_data)
+{
+  /* allocate node */
+  struct node* new_node =
+            (struct node*) malloc(sizeof(struct node));
+ 
+  /* put in the data  */
+  new_node->data  = new_data;
+ 
+  /* link the old list off the new node */
+  new_node->next = (*head_ref);    
+ 
+  /* move the head to point to the new node */
+  (*head_ref)    = new_node;
+}
+ 
+ 
+/* Function to print nodes in a given linked list */
+void printList(struct node *node)
+{
+	
+  while(node != NULL)
+  {
+    printf("%d ", node->data);
+    node = node->next;
+  }
+}
+		//MAIN FUCTION//
+void part(node* head,int n){
+	if(!head) return;
+	node* cur=head;
+	node* last;
+	while(cur){				//till end of list
+		while(cur&&cur->data<n){	//neglect nodes < n i.e. already placed
+			cur=cur->next;
+		}
+		if(cur==NULL)		
+		return;				//return if no node on left side > n
+		last=cur->next;		//set 2nd node for swapping
+		while(last&&last->data>n){
+			last=last->next;		//neglect nodes > n i.e. already placed
+		}
+		if(last==NULL)		// no node on right side with data < n so return
+		return;
+		int tmp=cur->data;		//swap function for swapping data of nodes
+		cur->data=last->data;
+		last->data=tmp;
+	}
+	
+	
+}
+
+int main()
+{
+  struct node *start = NULL;   
+ 
+   int a[]={1,5,7,2,10,12,3}; 
+   
+   for(int i=0;i<7;i++)  	
+ 	push(&start,a[6-i]);	//list: 1->5->7->2->10->12->3
+   
+
+  part(start,7);	//call partition function	
+
+  printList(start); //output:- 1 5 2 3 7 12 10
+
+}      
